@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240208.0",
+    "@line/bot-sdk": "^8.4.0",
     "wrangler": "^3.25.0"
   }
 }
