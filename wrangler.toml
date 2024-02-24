@@ -1,4 +1,4 @@
-name = "app"
+name = "blood-pressure-recorder-bot"
 compatibility_date = "2023-12-01"
 
 # [vars]
