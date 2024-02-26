@@ -10,7 +10,7 @@ CREATE TABLE in_progress_blood_pressure_records (
 
 DROP TABLE IF EXISTS blood_pressure_records;
 CREATE TABLE blood_pressure_records (
-		id INT AUTO_INCREMENT PRIMARY KEY,
+	id INT AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(32) NOT NULL,
     diastolic_blood_pressure INTEGER,
     systolic_blood_pressure INTEGER,

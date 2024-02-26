@@ -1,31 +1,82 @@
-const deleteInProgressRecord = async (DB: D1Database, userId: String) => {
-  const results = await DB.prepare(`DELETE FROM in_progress_blood_pressure_records WHERE user_id = ?`).bind(userId).run();
+const deleteInProgressRecord = async (DB: D1Database, userId: string) => {
+  const results = await DB.prepare(
+    `DELETE FROM in_progress_blood_pressure_records WHERE user_id = ?`,
+  )
+    .bind(userId)
+    .run()
   return results.success
 }
 
-const createInProgressRecord = async (DB: D1Database, userId: String) => {
-  const results = await DB.prepare(`INSERT INTO in_progress_blood_pressure_records (user_id) VALUES (?)`).bind(userId).run();
+const createInProgressRecord = async (
+  DB: D1Database,
+  userId: string,
+): Promise<boolean> => {
+  const results = await DB.prepare(
+    `INSERT INTO in_progress_blood_pressure_records (user_id) VALUES (?)`,
+  )
+    .bind(userId)
+    .run()
   return results.success
 }
 
-const getInProgressRecord = async (DB: D1Database, userId: String) => {
-
+const getInProgressRecord = async (
+  DB: D1Database,
+  userId: string,
+): Promise<D1Result> => {
+  const results = await DB.prepare(
+    `SELECT * FROM in_progress_blood_pressure_records WHERE user_id = ?`,
+  )
+    .bind(userId)
+    .all()
+  return results
 }
 
-const updateSysotolic = async (DB: D1Database, userId: String, text: String) => {
-
+const updateSysotolic = async (
+  DB: D1Database,
+  userId: string,
+  text: string,
+): Promise<boolean> => {
+  const results = await DB.prepare(
+    `UPDATE in_progress_blood_pressure_records SET systolic_blood_pressure = ? WHERE user_id = ?`,
+  )
+    .bind(text, userId)
+    .run()
+  return results.success
 }
 
-const updateDiastolic = async (DB: D1Database, userId: String, text: String) => {
-
+const updateDiastolic = async (
+  DB: D1Database,
+  userId: string,
+  text: string,
+): Promise<boolean> => {
+  const results = await DB.prepare(
+    `UPDATE in_progress_blood_pressure_records SET diastolic_blood_pressure = ? WHERE user_id = ?`,
+  )
+    .bind(text, userId)
+    .run()
+  return results.success
 }
 
-const updateHeartRate = async (DB: D1Database, userId: String, text: String) => {
-
+const createBloodPressureRecord = async (
+  DB: D1Database,
+  userId: string,
+  diastolic: number,
+  systolic: number,
+  date: string,
+): Promise<boolean> => {
+  const results = await DB.prepare(
+    `INSERT INTO blood_pressure_records (user_id, diastolic_blood_pressure, systolic_blood_pressure, date) VALUES (?, ?, ?, ?)`,
+  )
+    .bind(userId, diastolic, systolic, date)
+    .run()
+  return results.success
 }
 
-const createBloodPressureRecord = async (DB: D1Database, userId: String) => {
-
+export {
+  deleteInProgressRecord,
+  createInProgressRecord,
+  getInProgressRecord,
+  updateSysotolic,
+  updateDiastolic,
+  createBloodPressureRecord,
 }
-
-export { deleteInProgressRecord, createInProgressRecord, getInProgressRecord, updateSysotolic, updateDiastolic, updateHeartRate, createBloodPressureRecord }
