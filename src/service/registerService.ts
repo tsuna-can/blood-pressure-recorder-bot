@@ -8,7 +8,6 @@ import {
   updateSysotolic,
   createBloodPressureRecord,
 } from '../d1/d1'
-import { isInProgressBloodPressure } from '../models/inProgressBloodPressure'
 
 const handleStartRegister = async (
   DB: D1Database,
@@ -26,35 +25,33 @@ const handleRegister = async (
   userId: string,
   text: string,
 ): Promise<string> => {
+	// check is number
+	if (isNaN(Number(text))) {
+		return ERROR.NOT_NUMERIC
+	}
+	
   const inProgressRecord = await getInProgressRecord(DB, userId)
-  if (inProgressRecord === null) {
+  if (inProgressRecord === null || inProgressRecord === undefined) {
     console.error('inProgressRecord is null')
     return ERROR.DEFAULT_ERROR
   }
 
-  const inProgressRecordData = inProgressRecord.results[0]
-  if (isInProgressBloodPressure(inProgressRecordData)) {
-    const userId = inProgressRecordData.user_id
-    const sysotolic = inProgressRecordData.systolic_blood_pressure
-    const diastolic = inProgressRecordData.diastolic_blood_pressure
-    const date = inProgressRecordData.date || format(new Date(), 'yyyy-MM-dd')
+	const sysotolic = inProgressRecord.systolicBP
+	const diastolic = inProgressRecord.diastolicBP
+	const date = inProgressRecord.date || format(new Date(), 'yyyy-MM-dd')
 
-    if (sysotolic === null) {
-      const updateResult = await updateSysotolic(DB, userId, text)
-      return updateResult ? MESSAGE.REGISTER_DIASTOLIC : ERROR.DEFAULT_ERROR
-    } else if (diastolic === null) {
-      const updateResult = await updateDiastolic(DB, userId, text)
-      createBloodPressureRecord(DB, userId, Number(text), sysotolic, date)
-      deleteInProgressRecord(DB, userId)
-      return updateResult ? MESSAGE.REGISTER_DONE : ERROR.DEFAULT_ERROR
-    } else {
-      console.error('inProgressRecord status is invalid')
-      return ERROR.DEFAULT_ERROR
-    }
-  } else {
-    console.log('inProgressRecordData is not InProgressBloodPressure')
-    return ERROR.DEFAULT_ERROR
-  }
+	if (sysotolic === null) {
+		const updateResult = await updateSysotolic(DB, userId, text)
+		return updateResult ? MESSAGE.REGISTER_DIASTOLIC : ERROR.DEFAULT_ERROR
+	} else if (diastolic === null) {
+		const updateResult = await updateDiastolic(DB, userId, text)
+		createBloodPressureRecord(DB, userId, Number(text), sysotolic, date)
+		deleteInProgressRecord(DB, userId)
+		return updateResult ? MESSAGE.REGISTER_DONE : ERROR.DEFAULT_ERROR
+	} else {
+		console.error('inProgressRecord status is invalid')
+		return ERROR.DEFAULT_ERROR
+	}
 }
 
 export { handleStartRegister, handleRegister }

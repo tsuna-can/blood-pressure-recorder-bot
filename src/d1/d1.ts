@@ -1,3 +1,7 @@
+import { drizzle } from 'drizzle-orm/d1'
+import { inProgressBloodPressureRecords } from './schema'
+import { eq } from 'drizzle-orm'
+
 const deleteInProgressRecord = async (DB: D1Database, userId: string) => {
   const results = await DB.prepare(
     `DELETE FROM in_progress_blood_pressure_records WHERE user_id = ?`,
@@ -11,23 +15,21 @@ const createInProgressRecord = async (
   DB: D1Database,
   userId: string,
 ): Promise<boolean> => {
-  const results = await DB.prepare(
-    `INSERT INTO in_progress_blood_pressure_records (user_id) VALUES (?)`,
-  )
-    .bind(userId)
+  const results = await drizzle(DB)
+    .insert(inProgressBloodPressureRecords)
+    .values({
+      userId,
+    })
     .run()
   return results.success
 }
 
-const getInProgressRecord = async (
-  DB: D1Database,
-  userId: string,
-): Promise<D1Result> => {
-  const results = await DB.prepare(
-    `SELECT * FROM in_progress_blood_pressure_records WHERE user_id = ?`,
-  )
-    .bind(userId)
-    .all()
+const getInProgressRecord = async (DB: D1Database, userId: string) => {
+  const results = await drizzle(DB)
+    .select()
+    .from(inProgressBloodPressureRecords)
+    .where(eq(inProgressBloodPressureRecords.userId, userId))
+    .get()
   return results
 }
 
