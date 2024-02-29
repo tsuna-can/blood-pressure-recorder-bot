@@ -1,5 +1,5 @@
 import { drizzle } from 'drizzle-orm/d1'
-import { inProgressBloodPressureRecords } from './schema'
+import { bloodPressureRecords, inProgressBloodPressureRecords } from './schema'
 import { eq } from 'drizzle-orm'
 
 const deleteInProgressRecord = async (DB: D1Database, userId: string) => {
@@ -74,6 +74,18 @@ const createBloodPressureRecord = async (
   return results.success
 }
 
+const getBloodPressureRecordsByUserId = async (
+  DB: D1Database,
+  userId: string,
+) => {
+  const results = await drizzle(DB)
+    .select()
+    .from(bloodPressureRecords)
+    .where(eq(bloodPressureRecords.userId, userId))
+    .orderBy(bloodPressureRecords.date)
+  return results
+}
+
 export {
   deleteInProgressRecord,
   createInProgressRecord,
@@ -81,4 +93,5 @@ export {
   updateSysotolic,
   updateDiastolic,
   createBloodPressureRecord,
+  getBloodPressureRecordsByUserId,
 }

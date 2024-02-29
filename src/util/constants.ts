@@ -1,5 +1,6 @@
 const START_MESSAGE = {
   REGISTER: '登録',
+  DISPLAY_All: '一覧',
   STATISTICS: '統計',
 }
 

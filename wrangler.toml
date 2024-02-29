@@ -14,5 +14,5 @@ compatibility_date = "2023-12-01"
 
 [[d1_databases]]
 binding = "DB" # i.e. available in your Worker on env.DB
-database_name = "blood_pressure_bot_db"
-database_id = "b7bf62c5-46ca-4354-88db-f52e4614c97b"
+database_name = "blood_pressure_recorder_bot_db"
+database_id = "d4f6bddc-5284-4148-81af-1e89e5c05cbb"

@@ -2,7 +2,9 @@
   "name": "blood-pressure-recorder-bot",
   "scripts": {
     "dev": "wrangler dev --local src/index.ts",
-    "deploy": "wrangler deploy --minify src/index.ts"
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "format": "npx @biomejs/biome format ./src --write",
+    "lint": "npx @biomejs/biome lint ./src --apply"
   },
   "dependencies": {
     "date-fns": "^3.3.1",
