@@ -1,10 +1,10 @@
+import { eq } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/d1'
 import { bloodPressureRecords, inProgressBloodPressureRecords } from './schema'
-import { eq } from 'drizzle-orm'
 
 const deleteInProgressRecord = async (DB: D1Database, userId: string) => {
   const results = await DB.prepare(
-    `DELETE FROM in_progress_blood_pressure_records WHERE user_id = ?`,
+    'DELETE FROM in_progress_blood_pressure_records WHERE user_id = ?',
   )
     .bind(userId)
     .run()
@@ -39,7 +39,7 @@ const updateSysotolic = async (
   text: string,
 ): Promise<boolean> => {
   const results = await DB.prepare(
-    `UPDATE in_progress_blood_pressure_records SET systolic_blood_pressure = ? WHERE user_id = ?`,
+    'UPDATE in_progress_blood_pressure_records SET systolic_blood_pressure = ? WHERE user_id = ?',
   )
     .bind(text, userId)
     .run()
@@ -52,7 +52,7 @@ const updateDiastolic = async (
   text: string,
 ): Promise<boolean> => {
   const results = await DB.prepare(
-    `UPDATE in_progress_blood_pressure_records SET diastolic_blood_pressure = ? WHERE user_id = ?`,
+    'UPDATE in_progress_blood_pressure_records SET diastolic_blood_pressure = ? WHERE user_id = ?',
   )
     .bind(text, userId)
     .run()
@@ -67,7 +67,7 @@ const createBloodPressureRecord = async (
   date: string,
 ): Promise<boolean> => {
   const results = await DB.prepare(
-    `INSERT INTO blood_pressure_records (user_id, diastolic_blood_pressure, systolic_blood_pressure, date) VALUES (?, ?, ?, ?)`,
+    'INSERT INTO blood_pressure_records (user_id, diastolic_blood_pressure, systolic_blood_pressure, date) VALUES (?, ?, ?, ?)',
   )
     .bind(userId, diastolic, systolic, date)
     .run()

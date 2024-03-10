@@ -9,7 +9,7 @@ const handleDisplayAll = async (DB: D1Database, userId: string) => {
     )
     .join('\n')
 
-  return 'Date, Systolic, Diastolic\n' + result
+  return `Date, Systolic, Diastolic\n${result}`
 }
 
 export { handleDisplayAll }

@@ -1,13 +1,13 @@
-import { MESSAGE, ERROR } from '../util/constants'
 import { format } from 'date-fns'
 import {
-  deleteInProgressRecord,
+  createBloodPressureRecord,
   createInProgressRecord,
+  deleteInProgressRecord,
   getInProgressRecord,
   updateDiastolic,
   updateSysotolic,
-  createBloodPressureRecord,
 } from '../d1/d1'
+import { ERROR, MESSAGE } from '../util/constants'
 
 const handleStartRegister = async (
   DB: D1Database,
@@ -26,7 +26,7 @@ const handleRegister = async (
   text: string,
 ): Promise<string> => {
   // Validate input
-  if (isNaN(Number(text))) {
+  if (Number.isNaN(Number(text))) {
     return ERROR.NOT_NUMERIC
   }
 
@@ -48,10 +48,10 @@ const handleRegister = async (
     createBloodPressureRecord(DB, userId, Number(text), sysotolic, date)
     deleteInProgressRecord(DB, userId)
     return updateResult ? MESSAGE.REGISTER_DONE : ERROR.DEFAULT_ERROR
-  } else {
-    console.error('inProgressRecord status is invalid')
-    return ERROR.DEFAULT_ERROR
   }
+
+  console.error('inProgressRecord status is invalid')
+  return ERROR.DEFAULT_ERROR
 }
 
 export { handleStartRegister, handleRegister }
