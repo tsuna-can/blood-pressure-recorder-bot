@@ -4,10 +4,11 @@ import {
   WebhookEvent,
 } from '@line/bot-sdk'
 import { Hono } from 'hono'
-import { START_MESSAGE, MESSAGE } from './util/constants'
-import { handleStartRegister, handleRegister } from './service/registerService'
 import { getInProgressRecord } from './d1/d1'
 import { handleDisplayAll } from './service/displayListService'
+import { handleRegister, handleStartRegister } from './service/registerService'
+import { handleStatistics } from './service/statisticsService'
+import { MESSAGE, START_MESSAGE } from './util/constants'
 
 type Bindings = {
   DB: D1Database
@@ -56,7 +57,7 @@ const textEventHandler = async (
 
   let responseText = ''
   if (text === START_MESSAGE.STATISTICS) {
-    responseText = MESSAGE.DISPLAY_STATISTICS
+    responseText = await handleStatistics(DB, userId)
   } else if (text === START_MESSAGE.DISPLAY_All) {
     responseText = await handleDisplayAll(DB, userId)
   } else if (text === START_MESSAGE.REGISTER) {

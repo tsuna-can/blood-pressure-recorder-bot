@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm'
+import { avg, eq } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/d1'
 import { bloodPressureRecords, inProgressBloodPressureRecords } from './schema'
 
@@ -86,6 +86,18 @@ const getBloodPressureRecordsByUserId = async (
   return results
 }
 
+const getAverageByUserId = async (DB: D1Database, userId: string) => {
+  const result = await drizzle(DB)
+    .select({
+      systolic: avg(bloodPressureRecords.systolicBP),
+      diastolic: avg(bloodPressureRecords.diastolicBP),
+    })
+    .from(bloodPressureRecords)
+    .where(eq(bloodPressureRecords.userId, userId))
+    .get()
+  return result
+}
+
 export {
   deleteInProgressRecord,
   createInProgressRecord,
@@ -94,4 +106,5 @@ export {
   updateDiastolic,
   createBloodPressureRecord,
   getBloodPressureRecordsByUserId,
+  getAverageByUserId,
 }
