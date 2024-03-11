@@ -4,7 +4,6 @@ import {
   createInProgressRecord,
   deleteInProgressRecord,
   getInProgressRecord,
-  updateDiastolic,
   updateSysotolic,
 } from '../d1/d1'
 import { ERROR, MESSAGE } from '../util/constants'
@@ -36,18 +35,30 @@ const handleRegister = async (
     return ERROR.DEFAULT_ERROR
   }
 
-  const sysotolic = inProgressRecord.systolicBP
-  const diastolic = inProgressRecord.diastolicBP
+  const inProgressSysotolic = inProgressRecord.systolicBP
+  const inProgressDiastolic = inProgressRecord.diastolicBP
   const date = inProgressRecord.date || format(new Date(), 'yyyy-MM-dd')
 
-  if (sysotolic === null) {
+  // Register systolic as temp data
+  if (inProgressSysotolic === null) {
     const updateResult = await updateSysotolic(DB, userId, text)
     return updateResult ? MESSAGE.REGISTER_DIASTOLIC : ERROR.DEFAULT_ERROR
-  } else if (diastolic === null) {
-    const updateResult = await updateDiastolic(DB, userId, text)
-    createBloodPressureRecord(DB, userId, Number(text), sysotolic, date)
-    deleteInProgressRecord(DB, userId)
-    return updateResult ? MESSAGE.REGISTER_DONE : ERROR.DEFAULT_ERROR
+  }
+
+  // Register record
+  if (inProgressDiastolic === null) {
+    const diastolic = Number(text)
+    const createResult = await createBloodPressureRecord(
+      DB,
+      userId,
+      diastolic,
+      inProgressSysotolic,
+      date,
+    )
+    await deleteInProgressRecord(DB, userId)
+    return createResult
+      ? `${MESSAGE.REGISTER_DONE}\nSystolic : ${inProgressSysotolic}\nDiastolic : ${diastolic}`
+      : ERROR.DEFAULT_ERROR
   }
 
   console.error('inProgressRecord status is invalid')

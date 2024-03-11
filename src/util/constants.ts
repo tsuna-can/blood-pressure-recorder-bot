@@ -16,6 +16,7 @@ const MESSAGE = {
 const ERROR = {
   DEFAULT_ERROR: 'エラーが発生しました。最初からやり直してください。',
   NOT_NUMERIC: '数字で入力してください。',
+  REGISTER_TIMEOUT: 'タイムアウトしました。最初からやり直してください。',
 }
 
 export { START_MESSAGE, MESSAGE, ERROR }

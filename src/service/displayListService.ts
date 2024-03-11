@@ -1,6 +1,10 @@
-import { getBloodPressureRecordsByUserId } from '../d1/d1'
+import {
+  deleteInProgressRecord,
+  getBloodPressureRecordsByUserId,
+} from '../d1/d1'
 
 const handleDisplayAll = async (DB: D1Database, userId: string) => {
+  const deleteResult = await deleteInProgressRecord(DB, userId)
   const records = await getBloodPressureRecordsByUserId(DB, userId)
 
   const result = records
