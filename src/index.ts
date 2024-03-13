@@ -18,6 +18,7 @@ const app = new Hono<{ Bindings: Bindings }>()
 
 app.post('/api/webhook', async c => {
   const data = await c.req.json()
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const events: WebhookEvent[] = (data as any).events
   const accessToken: string = c.env.CHANNEL_ACCESS_TOKEN
 
