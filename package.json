@@ -17,5 +17,9 @@
     "drizzle-kit": "^0.20.14",
     "drizzle-orm": "^0.29.4",
     "wrangler": "^3.25.0"
+  },
+  "volta": {
+    "node": "20.11.1",
+    "npm": "10.2.4"
   }
 }
