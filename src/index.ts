@@ -9,15 +9,30 @@ import { handleDisplayAll } from './service/displayListService'
 import { handleRegister, handleStartRegister } from './service/registerService'
 import { handleStatistics } from './service/statisticsService'
 import { MESSAGE, START_MESSAGE } from './util/constants'
+import { validateSign } from './util/validateSign'
 
 type Bindings = {
   DB: D1Database
+  CHANNEL_ACCESS_TOKEN: string
+  CHANNEL_SECRET: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
 
 app.post('/api/webhook', async c => {
   const data = await c.req.json()
+
+  // validate signature
+  const xLineSignature = c.req.header('x-line-signature') ?? ''
+  const isValidSign = await validateSign(
+    xLineSignature,
+    c.env.CHANNEL_SECRET,
+    JSON.stringify(data),
+  )
+  if (!isValidSign) {
+    return c.json({ status: 'error' }, 400)
+  }
+
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const events: WebhookEvent[] = (data as any).events
   const accessToken: string = c.env.CHANNEL_ACCESS_TOKEN
